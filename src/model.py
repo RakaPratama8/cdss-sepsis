@@ -1,6 +1,4 @@
 import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Masking, GRU, Dense, Dropout
 
 def build_sepsis_gru(input_shape):
     model = tf.keras.Sequential([

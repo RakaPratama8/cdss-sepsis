@@ -9,14 +9,41 @@ API_URL = os.environ.get("API_URL", "http://server:8000")
 col1, col2 = st.columns([2, 1])
 
 with col1:
-    st.header("Patient Monitor")
-    hr = st.number_input("Heart Rate (bpm)", value=85)
-    sys_bp = st.number_input("Systolic BP (mmHg)", value=110)
+    st.header("Patient Inference")
+    
+    # 1. Hospital Selector (Crucial for loading the correct scaler)
+    hospital_id = st.selectbox("Select Hospital Site:", ["hospital_a", "hospital_b", "hospital_c"])
+    
+    # 2. File Uploader for the 72-hour sequence
+    uploaded_file = st.file_uploader("Upload Patient Vitals (CSV/Excel)", type=["csv", "xlsx"])
     
     if st.button("Predict Sepsis Risk"):
-        with st.spinner("Analyzing..."):
-            time.sleep(1) 
-            st.error("⚠️ **High Risk Detected: 82% Probability**")
+        if uploaded_file is not None:
+            with st.spinner("Processing 72-hour sequence and running inference..."):
+                # Prepare the file and data to send to FastAPI
+                files = {"file": (uploaded_file.name, uploaded_file.getvalue(), uploaded_file.type)}
+                data = {"hospital_id": hospital_id}
+                
+                try:
+                    response = requests.post(f"{API_URL}/api/predict", files=files, data=data)
+                    
+                    if response.status_code == 200:
+                        result = response.json()
+                        if "error" in result:
+                            st.warning(f"⚠️ {result['error']}")
+                        else:
+                            risk_score = result.get("risk_score", 0.0)
+                            st.subheader("Results")
+                            if risk_score > 0.5:
+                                st.error(f"🚨 **High Risk Detected: {risk_score * 100:.1f}% Probability of Sepsis**")
+                            else:
+                                st.success(f"✅ **Low Risk: {risk_score * 100:.1f}% Probability of Sepsis**")
+                    else:
+                        st.error(f"Backend Error: {response.text}")
+                except Exception as e:
+                    st.error(f"Failed to connect to API: {e}")
+        else:
+            st.warning("Please upload a patient .csv or .xlsx file first.")
 
 with col2:
     st.header("Network Hub")
