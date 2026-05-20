@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  server:
+    build: 
+      context: .
+      dockerfile: server/Dockerfile
+    ports:
+      - "8000:8000"
+      - "8080:8080"
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  client-a:
+    build: 
+      context: .
+      dockerfile: client/Dockerfile
+    environment:
+      - HOSPITAL_ID=hospital_a
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./data:/data 
+    depends_on:
+      - server
+
+  client-b:
+    build: 
+      context: .
+      dockerfile: client/Dockerfile
+    environment:
+      - HOSPITAL_ID=hospital_b
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./data:/data
+    depends_on:
+      - server
+
+  client-c:
+    build: 
+      context: .
+      dockerfile: client/Dockerfile
+    environment:
+      - HOSPITAL_ID=hospital_c
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./data:/data
+    depends_on:
+      - server
+
+  interface:
+    build: 
+      context: .
+      dockerfile: interface/Dockerfile
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://server:8000
+    depends_on:
+      - server
