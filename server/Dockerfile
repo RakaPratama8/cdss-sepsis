@@ -5,7 +5,7 @@ FROM python:3.10.7-slim
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Set the working directory
-WORKDIR /app
+WORKDIR /cdss-sepsis
 
 # 2. Copy dependencies
 COPY requirements.txt .
@@ -17,8 +17,8 @@ RUN uv pip install --system --no-cache-dir -r requirements.txt
 
 # 4. Copy the rest of your code
 # (Change the second path depending on if this is the client, server, or interface)
-COPY ./src /app/src
-COPY ./server /app/server 
+COPY ./src /cdss-sepsis/src
+COPY ./server /cdss-sepsis/server 
 
 # Expose ports and run the command (Example for the Server)
 EXPOSE 8000 8080
