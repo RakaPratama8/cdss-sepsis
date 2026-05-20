@@ -1,5 +1,5 @@
 # Add this at the very top of server/main.py
-from fastapi import UploadFile, File, Form
+from fastapi import FastAPI, UploadFile, File, Form
 from src.preprocessing import SepsisPreprocessor
 import os
 import numpy as np
@@ -7,6 +7,7 @@ from src.model import build_sepsis_gru
 
 # Initialize your pipeline
 preprocessor = SepsisPreprocessor()
+app = FastAPI()
 
 # Add this at the very bottom of server/main.py
 @app.post("/api/predict")

@@ -27,9 +27,12 @@ class SepsisPreprocessor:
         return pd.concat(patient_dataframes, ignore_index=True)
 
     def process_live_inference(self, file_object, filename, hospital_id):
-        if filename.endswith('.csv'): df = pd.read_csv(file_object)
-        elif filename.endswith('.xlsx'): df = pd.read_excel(file_object)
-        else: raise ValueError("Unsupported file format.")
+        if filename.endswith('.csv'): 
+            df = pd.read_csv(file_object)
+        elif filename.endswith('.xlsx'): 
+            df = pd.read_excel(file_object)
+        else: 
+            raise ValueError("Unsupported file format.")
 
         df.columns = [col.lower() for col in df.columns]
         if 'patient_id' not in df.columns: df.insert(0, 'patient_id', 'live_inference_patient')
