@@ -18,4 +18,4 @@ COPY ./interface /cdss-sepsis/interface
 EXPOSE 8501
 
 # Run the Streamlit dashboard
-CMD ["streamlit", "run", "interface/cdss-sepsis.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "interface/app.py", "--server.port=8501", "--server.address=0.0.0.0"]

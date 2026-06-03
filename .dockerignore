@@ -1,0 +1,14 @@
+data/
+physionet-2019-preprocessed/
+*.npy
+*.npz
+*.csv
+*.xlsx
+
+.venv/
+venv/
+env/
+
+__pycache__/
+*.pyc
+.DS_Store
